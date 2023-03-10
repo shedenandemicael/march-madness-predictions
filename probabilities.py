@@ -9,6 +9,9 @@ def main():
     # removes non-tournament teams
     data = tournament_teams(data)
 
+    team1 = generate_dist(data[0])
+    team2 = generate_dist(data[6])
+
 def tournament_teams(data):
     """ 
     Removes teams from the data set that
@@ -45,7 +48,7 @@ def A_beats_B(team1, team2):
     P(B < A) = P(B - A < 0). 
     """
     # find statistics of the joint normal 
-    joint_mean = team1[0] - team2[0]
+    joint_mean = team2[0] - team1[0]
     joint_var = team2[1] + team2[1]
 
     # determine z-score
