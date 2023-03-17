@@ -11,9 +11,6 @@ def main():
     # removes non-tournament teams
     data = tournament_teams(data)
 
-    team1 = generate_dist(data[0])
-    team2 = generate_dist(data[6])
-
     print(highest_likelihood(first_round, data))
     print(highest_ranked(first_round, data))
     print(random_likelihood(first_round, data))
@@ -83,6 +80,7 @@ def simulate_game_highest_likelihood(next_round, i, game1_prob, game2_prob):
         next_game.append(first_round_id[i + 1][1])
     # set up next round
     next_round.append(next_game)
+    return game1_prob / 0.5 * game2_prob / 0.5
 
 def simulate_round_highest_likelihood(cur_round, next_round, bracket_likelihood, data):
     """
@@ -99,7 +97,7 @@ def simulate_round_highest_likelihood(cur_round, next_round, bracket_likelihood,
         simulate_game_highest_likelihood(next_round, i, game1_prob, game2_prob)
 
         # calculate current likelihood
-        bracket_likelihood *= game1_prob / 0.5 * game2_prob / 0.5
+        bracket_likelihood *= simulate_game_highest_likelihood(next_round, i, game1_prob, game2_prob)
     return bracket_likelihood
 
 def highest_likelihood(first_round, data):
@@ -145,10 +143,10 @@ def simulate_round_highest_ranked(cur_round, next_round, bracket_likelihood, dat
         higher_ranked2 = first_round_id[i + 1][0]
         lower_ranked2 = first_round_id[i + 1][1]
         if data[higher_ranked1][3] > data[lower_ranked1][3]:
-            lower_ranked1 = higher_ranked1
+            lower_ranked1 = first_round_id[i][0]
             higher_ranked1 = first_round_id[i][1]
         if data[higher_ranked2][3] > data[lower_ranked2][3]:
-            lower_ranked2 = higher_ranked2
+            lower_ranked2 = first_round_id[i + 1][0]
             higher_ranked2 = first_round_id[i + 1][1]
 
         # generate probabilites
@@ -157,6 +155,7 @@ def simulate_round_highest_ranked(cur_round, next_round, bracket_likelihood, dat
 
         # set up next round
         next_game = [higher_ranked1, higher_ranked2]
+        print(next_game)
         next_round.append(next_game)
 
         # calculate current likelihood
